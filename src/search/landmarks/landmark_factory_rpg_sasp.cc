@@ -112,19 +112,20 @@ static void add_binary_variable_conditions(
     const unordered_set<int> &precondition_variables,
     utils::HashSet<FactPair> &result) {
     State initial_state = task_proxy.get_initial_state();
+    initial_state.unpack();
     for (EffectProxy effect : effects) {
         FactProxy effect_atom = effect.get_fact();
         int var_id = effect_atom.get_variable().get_id();
         if (!precondition_variables.contains(var_id) &&
             effect_atom.get_variable().get_domain_size() == 2) {
+            int init_value = initial_state[var_id];
             for (const FactPair &atom : landmark.atoms) {
-                if (atom.var == var_id &&
-                    initial_state[var_id] != atom.value) {
+                if (atom.var == var_id && init_value != atom.value) {
                     assert(ranges::none_of(
                         result, [&](const FactPair &result_atom) {
                             return result_atom.var == var_id;
                         }));
-                    result.insert(initial_state.get_fact(var_id).get_pair());
+                    result.insert({var_id, init_value});
                     break;
                 }
             }

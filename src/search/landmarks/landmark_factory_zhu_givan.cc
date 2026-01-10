@@ -112,7 +112,8 @@ void LandmarkFactoryZhuGivan::extract_landmarks(
 LandmarkFactoryZhuGivan::PropositionLayer
 LandmarkFactoryZhuGivan::initialize_relaxed_plan_graph(
     const TaskProxy &task_proxy, unordered_set<int> &triggered_ops) const {
-    const State &initial_state = task_proxy.get_initial_state();
+    State initial_state = task_proxy.get_initial_state();
+    initial_state.unpack();
     const VariablesProxy &variables = task_proxy.get_variables();
     PropositionLayer initial_layer;
     initial_layer.resize(variables.size());
@@ -121,7 +122,7 @@ LandmarkFactoryZhuGivan::initialize_relaxed_plan_graph(
         initial_layer[var_id].resize(var.get_domain_size());
 
         // Label nodes from initial state.
-        int value = initial_state[var].get_value();
+        int value = initial_state[var_id];
         initial_layer[var_id][value].labels.emplace(var_id, value);
 
         triggered_ops.insert(
