@@ -56,8 +56,9 @@ void LandmarkFactoryRpgExhaust::generate_all_atomic_landmarks(
             const FactPair atom(var.get_id(), value);
             if (!landmark_graph->contains_atomic_landmark(atom)) {
                 Landmark landmark({atom}, ATOMIC);
-                if (!relaxed_task_solvable(task_proxy, exploration, landmark,
-                                           use_unary_relaxation)) {
+                if (!relaxed_task_solvable(
+                        task_proxy, exploration, landmark,
+                        use_unary_relaxation)) {
                     landmark_graph->add_landmark(move(landmark));
                 }
             }
@@ -84,7 +85,7 @@ class LandmarkFactoryRpgExhaustFeature
     : public plugins::TypedFeature<LandmarkFactory, LandmarkFactoryRpgExhaust> {
 public:
     LandmarkFactoryRpgExhaustFeature() : TypedFeature("lm_exhaust") {
-        document_title("Exhaustive Landmarks");
+        document_title("Exhaustive landmarks");
         document_synopsis(
             "Exhaustively checks for each atom if it is a landmark."
             "This check is done using relaxed planning.");
@@ -102,8 +103,7 @@ public:
         add_landmark_factory_options_to_feature(*this);
 
         document_language_support(
-            "conditional_effects",
-            "ignored, i.e. not supported");
+            "conditional_effects", "ignored, i.e. not supported");
     }
 
     virtual shared_ptr<LandmarkFactoryRpgExhaust> create_component(
